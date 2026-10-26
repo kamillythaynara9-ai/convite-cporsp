@@ -23,7 +23,7 @@ As três ficam lado a lado em `opcoes.html`.
 
 Só a capa (envelope) muda; o resto é igual.
 - `index.html` — capa original
-- `capa-marca-dagua.html` — brasão do CPOR/SP nas cores originais, grande e centralizado na parte lisa
-- `capa-foto.html` — foto aérea do CPOR/SP como uma fotografia sobre o papel, ocupando toda a parte de baixo da capa, com borda reta
+- `capa-marca-dagua.html` — brasão do CPOR/SP nas cores originais, grande, atravessando a linha onde o envelope abre e esmaecendo para baixo
+- `capa-foto.html` — foto aérea do CPOR/SP como uma fotografia sobre o papel, ocupando toda a parte de baixo da capa, surgindo do verde em degradê, com a linha da aba aparente
 
 Se mudar algo no `index.html`, gere as outras duas de novo trocando `assets/convite-1.jpg` por `assets/convite-1-marca.jpg` ou `assets/convite-1-foto.jpg`.
