@@ -8,7 +8,7 @@ Convite interativo em uma página só (`index.html` + imagens em `assets/`).
 
 Os botões são estáticos; só a troca de página é animada.
 
-No verso, o botão **Confirmar presença** (no lugar do antigo QR code) abre o formulário. Por enquanto aponta para https://www.google.com; para trocar, edite o `href` da classe `rsvp` no `index.html` e gere as outras capas de novo.
+No verso, o botão **Confirmar presença** (no lugar do antigo QR code) abre o formulário. Ele leva ao Google Forms de confirmação; para trocar o link, edite o `href` da classe `rsvp` no `index.html` e gere as outras capas de novo.
 
 O cartão aberto pode ser ampliado com os gestos de sempre: pinça ou dois toques no celular; Ctrl + rolagem, pinça no trackpad, Ctrl e + ou duplo clique no computador. Ampliado, dá para arrastar. Ao virar ou fechar, ele volta ao tamanho normal.
 
