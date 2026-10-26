@@ -111,7 +111,35 @@
     background: var(--creme);
   }
   .face img { display: block; width: 100%; height: 100%; }
-  .face.verso { transform: rotateY(180deg); }
+  .face.verso { transform: rotateY(180deg); container-type: inline-size; }
+
+  /* Botão de confirmação no verso, no lugar do antigo QR code (85% da altura da arte) */
+  .rsvp {
+    position: absolute;
+    left: 50%;
+    top: 85.2%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    padding: .9em 1.35em .85em;
+    font: 600 11px/1 "Cormorant Garamond", Georgia, serif;
+    font-size: 2.6cqw;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--creme);
+    background: var(--tinta);
+    border: 1px solid var(--tinta);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 .28em var(--tinta), inset 0 0 0 calc(.28em + 1px) var(--dourado);
+    visibility: hidden;
+    transition: visibility 0s .55s;
+  }
+  .verso-visivel .rsvp { visibility: visible; }
+  @media (hover: hover) { .rsvp:hover { background: #2a4639; box-shadow: inset 0 0 0 .28em #2a4639, inset 0 0 0 calc(.28em + 1px) var(--dourado); } }
+  .rsvp:focus-visible { outline: 2px solid var(--dourado); outline-offset: 3px; }
   /* Sombra do cartão enquanto está dentro do envelope */
   .face .sombra-dentro {
     position: absolute;
@@ -127,6 +155,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
+    pointer-events: none;
     transform-style: preserve-3d;
     transition: transform .3s ease-out 1.55s;
   }
@@ -276,6 +305,8 @@
           </div>
           <div class="face verso">
             <img draggable="false" src="assets/convite-3.jpg" alt="Convite para a Solenidade de Passagem de Comando do CPOR/SP" width="1240" height="1748">
+            <!-- Link do formulário de confirmação (trocar pelo endereço do formulário) -->
+            <a class="rsvp" href="https://www.google.com" target="_blank" rel="noopener">Confirmar presença</a>
           </div>
         </div>
       </div>
@@ -427,6 +458,7 @@
 
     palco.addEventListener("pointerdown", function (e) {
       if (!podeAmpliar() || (e.pointerType === "mouse" && e.button !== 0)) return;
+      if (e.target.closest(".rsvp")) return;   // deixa o link de confirmação funcionar
       try { palco.setPointerCapture(e.pointerId); } catch (_) {}
       pontos.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pontos.size > 1) ultimoToque = null;
