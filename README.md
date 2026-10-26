@@ -18,12 +18,11 @@ O cartão aberto pode ser ampliado com os gestos de sempre: pinça ou dois toque
 
 Para trocar uma arte, substitua o arquivo em `assets/` mantendo o nome e a proporção 1240 × 1748.
 
-## Capas alternativas
-As três ficam lado a lado em `opcoes.html`.
+## Capas
+As três ficam lado a lado em `opcoes.html`. Só a capa (envelope) muda; o resto é igual.
+- `index.html` — capa 1: brasão ao centro, selo de cera embaixo
+- `capa-2.html` — capa 2: brasão como selo
+- `capa-3.html` — capa 3: selo de cera no alto, brasão embaixo
 
-Só a capa (envelope) muda; o resto é igual.
-- `index.html` — capa original
-- `capa-marca-dagua.html` — brasão do CPOR/SP nas cores originais, grande, atravessando a linha onde o envelope abre e esmaecendo para baixo
-- `capa-foto.html` — foto aérea do CPOR/SP como uma fotografia sobre o papel, ocupando toda a parte de baixo da capa, surgindo do verde em degradê, com a linha da aba aparente
-
-Se mudar algo no `index.html`, gere as outras duas de novo trocando `assets/convite-1.jpg` por `assets/convite-1-marca.jpg` ou `assets/convite-1-foto.jpg`.
+Cada página indica onde fica o selo (o anel de foco do teclado) pelas variáveis `--selo-x`, `--selo-y` e `--selo-w` no `style` do `#convite`.
+Se mudar algo no `index.html`, copie para `capa-2.html` e `capa-3.html` trocando só a imagem da capa (`assets/convite-1b.jpg` / `assets/convite-1c.jpg`) e esse `style`.
