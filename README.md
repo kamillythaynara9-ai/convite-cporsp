@@ -8,6 +8,8 @@ Convite interativo em uma página só (`index.html` + imagens em `assets/`).
 
 Os botões são estáticos; só a troca de página é animada.
 
+O cartão aberto pode ser ampliado com os gestos de sempre: pinça ou dois toques no celular; Ctrl + rolagem, pinça no trackpad, Ctrl e + ou duplo clique no computador. Ampliado, dá para arrastar. Ao virar ou fechar, ele volta ao tamanho normal.
+
 ## Publicar
 - **GitHub Pages**: Settings → Pages → Branch `main`, pasta `/ (root)`.
 - **Netlify**: arraste a pasta do repositório ou conecte o repositório (sem build).

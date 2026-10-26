@@ -56,7 +56,18 @@
     height: min(calc(100svh - 112px), calc((100vw - 32px) * 1.40968), 1150px);
     aspect-ratio: 1240 / 1748;
     perspective: 2200px;
+    z-index: 1;
+    transform-origin: 0 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
   }
+  .palco img { -webkit-user-drag: none; }
+  /* Ampliar: pinça, dois toques, Ctrl + rolagem, Ctrl e + */
+  .palco.aberto { touch-action: none; }
+  .palco.suave { transition: transform .3s ease; }
+  .palco.ampliado { cursor: grab; }
+  .palco.arrastando { cursor: grabbing; }
 
   /* ---------- Fundo do envelope (aparece quando as abas abrem) ---------- */
   .forro {
@@ -186,6 +197,8 @@
 
   /* ---------- Botões: estáticos, abaixo do cartão para não cobrir nada ---------- */
   .controles {
+    position: relative;
+    z-index: 2;
     min-height: 46px;
     display: flex;
     align-items: center;
@@ -217,13 +230,13 @@
     box-shadow: inset 0 0 0 3px var(--creme), inset 0 0 0 4px var(--dourado);
   }
   .botao.secundario {
-    background: transparent;
+    background: #152b23;
     color: var(--creme);
     border: 1px solid rgba(179, 154, 98, .75);
   }
   @media (hover: hover) {
     .botao.principal:hover { background: #fbf7ea; border-color: #fbf7ea; box-shadow: inset 0 0 0 3px #fbf7ea, inset 0 0 0 4px var(--dourado); }
-    .botao.secundario:hover { background: rgba(242, 236, 216, .08); }
+    .botao.secundario:hover { background: #1d382e; }
   }
   .botao:focus-visible { outline: 2px solid var(--dourado); outline-offset: 3px; }
 
@@ -258,11 +271,11 @@
       <div class="cartao-ergue">
         <div class="cartao-gira">
           <div class="face frente">
-            <img src="assets/convite-2.jpg" alt="Antigos Comandantes do CPOR/SP, de 1930 aos dias de hoje" width="1240" height="1748">
+            <img draggable="false" src="assets/convite-2.jpg" alt="Antigos Comandantes do CPOR/SP, de 1930 aos dias de hoje" width="1240" height="1748">
             <div class="sombra-dentro" aria-hidden="true"></div>
           </div>
           <div class="face verso">
-            <img src="assets/convite-3.jpg" alt="Convite para a Solenidade de Passagem de Comando do CPOR/SP" width="1240" height="1748">
+            <img draggable="false" src="assets/convite-3.jpg" alt="Convite para a Solenidade de Passagem de Comando do CPOR/SP" width="1240" height="1748">
           </div>
         </div>
       </div>
@@ -270,13 +283,13 @@
 
     <div class="aba esq" aria-hidden="true">
       <div class="folha">
-        <div class="lado fora"><img src="assets/convite-1.jpg" alt=""></div>
+        <div class="lado fora"><img draggable="false" src="assets/convite-1.jpg" alt=""></div>
         <div class="lado dentro"></div>
       </div>
     </div>
     <div class="aba dir" aria-hidden="true">
       <div class="folha">
-        <div class="lado fora"><img src="assets/convite-1.jpg" alt=""></div>
+        <div class="lado fora"><img draggable="false" src="assets/convite-1.jpg" alt=""></div>
         <div class="lado dentro"></div>
       </div>
     </div>
@@ -350,6 +363,162 @@
       );
     }
 
+    /* ---------------- Ampliar o cartão ---------------- */
+    var MAX = 4;
+    var z = { s: 1, x: 0, y: 0 };
+
+    function limitar(v, a, b) { return Math.min(Math.max(v, a), b); }
+    function podeAmpliar() { return palco.classList.contains("aberto") && !ocupado; }
+    // Posição do cartão sem ampliação (não depende do transform)
+    function base() {
+      return { left: palco.offsetLeft, top: palco.offsetTop, w: palco.offsetWidth, h: palco.offsetHeight };
+    }
+
+    function aplicar(s, x, y, suave) {
+      var b = base();
+      var vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+      s = limitar(s, 1, MAX);
+      if (s <= 1.001) { s = 1; x = 0; y = 0; }
+      else {
+        var W = b.w * s, H = b.h * s, L = b.left + x, T2 = b.top + y;
+        L = W >= vw ? limitar(L, vw - W, 0) : limitar(L, 0, vw - W);
+        T2 = H >= vh ? limitar(T2, vh - H, 0) : limitar(T2, 0, vh - H);
+        x = L - b.left; y = T2 - b.top;
+      }
+      z = { s: s, x: x, y: y };
+      palco.classList.toggle("suave", !!suave);
+      palco.classList.toggle("ampliado", s > 1);
+      palco.style.transform = s === 1 ? "" : "translate(" + x + "px," + y + "px) scale(" + s + ")";
+    }
+
+    // Amplia mantendo parado o ponto (px, py) da tela
+    function ampliarEm(px, py, s, suave) {
+      var b = base();
+      s = limitar(s, 1, MAX);
+      var cx = (px - b.left - z.x) / z.s, cy = (py - b.top - z.y) / z.s;
+      aplicar(s, px - b.left - cx * s, py - b.top - cy * s, suave);
+    }
+
+    function centro() {
+      var r = palco.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+
+    // Toque / mouse: pinça, arrastar e dois toques
+    var pontos = new Map(), gesto = null, ultimoToque = null;
+
+    function iniciarGesto() {
+      var p = Array.from(pontos.values()), b = base();
+      if (p.length >= 2) {
+        var mx = (p[0].x + p[1].x) / 2, my = (p[0].y + p[1].y) / 2;
+        gesto = {
+          tipo: "pinca",
+          d0: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1,
+          s0: z.s,
+          cx: (mx - b.left - z.x) / z.s,
+          cy: (my - b.top - z.y) / z.s
+        };
+      } else if (p.length === 1) {
+        gesto = { tipo: "arrasto", px: p[0].x, py: p[0].y, x0: z.x, y0: z.y, t0: performance.now(), moveu: false };
+      } else {
+        gesto = null;
+      }
+    }
+
+    palco.addEventListener("pointerdown", function (e) {
+      if (!podeAmpliar() || (e.pointerType === "mouse" && e.button !== 0)) return;
+      try { palco.setPointerCapture(e.pointerId); } catch (_) {}
+      pontos.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pontos.size > 1) ultimoToque = null;
+      iniciarGesto();
+    });
+
+    palco.addEventListener("pointermove", function (e) {
+      if (!pontos.has(e.pointerId) || !gesto) return;
+      pontos.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      var b = base();
+      if (gesto.tipo === "pinca" && pontos.size >= 2) {
+        var p = Array.from(pontos.values());
+        var mx = (p[0].x + p[1].x) / 2, my = (p[0].y + p[1].y) / 2;
+        var s = limitar(gesto.s0 * Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) / gesto.d0, 1, MAX);
+        aplicar(s, mx - b.left - gesto.cx * s, my - b.top - gesto.cy * s);
+      } else if (gesto.tipo === "arrasto") {
+        var dx = e.clientX - gesto.px, dy = e.clientY - gesto.py;
+        if (Math.hypot(dx, dy) > 8) gesto.moveu = true;
+        if (z.s > 1 && gesto.moveu) {
+          palco.classList.add("arrastando");
+          aplicar(z.s, gesto.x0 + dx, gesto.y0 + dy);
+        }
+      }
+    });
+
+    function soltar(e) {
+      if (!pontos.has(e.pointerId)) return;
+      var g = gesto;
+      pontos.delete(e.pointerId);
+      palco.classList.remove("arrastando");
+
+      // Dois toques (ou duplo clique): amplia no ponto tocado, ou volta ao normal
+      if (e.type === "pointerup" && g && g.tipo === "arrasto" && !g.moveu && performance.now() - g.t0 < 300) {
+        var agora = performance.now();
+        if (ultimoToque && agora - ultimoToque.t < 320 && Math.hypot(e.clientX - ultimoToque.x, e.clientY - ultimoToque.y) < 40) {
+          if (z.s > 1.05) aplicar(1, 0, 0, true);
+          else ampliarEm(e.clientX, e.clientY, 2.5, true);
+          ultimoToque = null;
+        } else {
+          ultimoToque = { t: agora, x: e.clientX, y: e.clientY };
+        }
+      }
+      if (pontos.size === 0 && z.s < 1.03) aplicar(1, 0, 0, true);
+      iniciarGesto();
+    }
+    palco.addEventListener("pointerup", soltar);
+    palco.addEventListener("pointercancel", soltar);
+
+    // Computador: Ctrl + rolagem e pinça no trackpad ampliam; rolagem move quando ampliado
+    window.addEventListener("wheel", function (e) {
+      if (!podeAmpliar()) return;
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        var passo = e.deltaMode === 1 ? 0.05 : 0.0025;
+        ampliarEm(e.clientX, e.clientY, z.s * limitar(Math.exp(-e.deltaY * passo), 0.5, 2));
+      } else if (z.s > 1) {
+        e.preventDefault();
+        aplicar(z.s, z.x - e.deltaX, z.y - e.deltaY);
+      }
+    }, { passive: false });
+
+    // Safari no Mac: pinça no trackpad
+    var sGesto = 1;
+    window.addEventListener("gesturestart", function (e) {
+      if (!podeAmpliar() || pontos.size) return;
+      e.preventDefault(); sGesto = z.s;
+    });
+    window.addEventListener("gesturechange", function (e) {
+      if (!podeAmpliar() || pontos.size) return;
+      e.preventDefault(); ampliarEm(e.clientX, e.clientY, sGesto * e.scale);
+    });
+
+    // Ctrl/Cmd e "+", "-" ou "0"
+    window.addEventListener("keydown", function (e) {
+      if (!(e.ctrlKey || e.metaKey) || !podeAmpliar()) return;
+      var c = centro();
+      if (e.key === "+" || e.key === "=") { e.preventDefault(); ampliarEm(c.x, c.y, z.s * 1.25, true); }
+      else if (e.key === "-") { e.preventDefault(); ampliarEm(c.x, c.y, z.s / 1.25, true); }
+      else if (e.key === "0") { e.preventDefault(); aplicar(1, 0, 0, true); }
+    });
+
+    window.addEventListener("resize", function () { aplicar(z.s, z.x, z.y); });
+
+    // Antes de virar ou fechar, o cartão volta ao tamanho normal
+    function semZoom(fn) {
+      if (z.s === 1) { fn(); return; }
+      aplicar(1, 0, 0, true);
+      ocupado = true;
+      setTimeout(function () { ocupado = false; palco.classList.remove("suave"); fn(); }, 320);
+    }
+
+    /* ---------------- Navegação ---------------- */
     document.getElementById("abrir").addEventListener("click", function () {
       if (ocupado) return;
       palco.classList.add("aberto");
@@ -359,25 +528,31 @@
 
     document.getElementById("fechar").addEventListener("click", function () {
       if (ocupado) return;
-      palco.classList.remove("aberto");
-      aviso.textContent = "Envelope fechado.";
-      depois(T.fechar, function () { mostrar(null); document.getElementById("abrir").focus({ preventScroll: true }); });
+      semZoom(function () {
+        palco.classList.remove("aberto");
+        aviso.textContent = "Envelope fechado.";
+        depois(T.fechar, function () { mostrar(null); document.getElementById("abrir").focus({ preventScroll: true }); });
+      });
     });
 
     document.getElementById("virar").addEventListener("click", function () {
       if (ocupado) return;
-      palco.classList.add("verso-visivel");
-      erguer();
-      aviso.textContent = "Verso: convite da Passagem de Comando.";
-      depois(T.virar, function () { mostrar("verso", "desvirar"); });
+      semZoom(function () {
+        palco.classList.add("verso-visivel");
+        erguer();
+        aviso.textContent = "Verso: convite da Passagem de Comando.";
+        depois(T.virar, function () { mostrar("verso", "desvirar"); });
+      });
     });
 
     document.getElementById("desvirar").addEventListener("click", function () {
       if (ocupado) return;
-      palco.classList.remove("verso-visivel");
-      erguer();
-      aviso.textContent = "Frente: Antigos Comandantes.";
-      depois(T.virar, function () { mostrar("frente", "virar"); });
+      semZoom(function () {
+        palco.classList.remove("verso-visivel");
+        erguer();
+        aviso.textContent = "Frente: Antigos Comandantes.";
+        depois(T.virar, function () { mostrar("frente", "virar"); });
+      });
     });
   })();
 </script>
