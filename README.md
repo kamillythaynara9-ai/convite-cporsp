@@ -15,3 +15,11 @@ O cartão aberto pode ser ampliado com os gestos de sempre: pinça ou dois toque
 - **Netlify**: arraste a pasta do repositório ou conecte o repositório (sem build).
 
 Para trocar uma arte, substitua o arquivo em `assets/` mantendo o nome e a proporção 1240 × 1748.
+
+## Capas alternativas
+Só a capa (envelope) muda; o resto é igual.
+- `index.html` — capa original
+- `capa-marca-dagua.html` — brasão do CPOR/SP em relevo no papel, como marca-d'água
+- `capa-foto.html` — foto aérea do CPOR/SP como uma fotografia sobre o papel, abaixo do selo
+
+Se mudar algo no `index.html`, gere as outras duas de novo trocando `assets/convite-1.jpg` por `assets/convite-1-marca.jpg` ou `assets/convite-1-foto.jpg`.

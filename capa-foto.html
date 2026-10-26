@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Convite — Passagem de Comando CPOR/SP</title>
+<meta name="description" content="Convite para a Solenidade de Passagem de Comando do CPOR/SP — 14/01/2027.">
+<meta property="og:title" content="Convite — Passagem de Comando CPOR/SP">
+<meta property="og:description" content="Solenidade de Passagem de Comando do CPOR/SP — quinta-feira, 14/01/2027, às 19h.">
+<meta property="og:image" content="assets/convite-1-foto.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#13261f">
+<link rel="preload" as="image" href="assets/convite-1-foto.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #1b342b;
+    --verde-fundo: #13261f;
+    --verde-forro: #10221b;
+    --creme: #f2ecd8;
+    --dourado: #b39a62;
+    --tinta: #20372f;
+    /* Onde a faixa estampada começa na arte do envelope (904px de 1240px) */
+    --corte: 0.72903;
+    --curva: cubic-bezier(.65, 0, .35, 1);
+    --curva-saida: cubic-bezier(.22, 1, .36, 1);
+    --sombra: 0 30px 60px -20px rgba(4, 12, 9, .85), 0 10px 20px -10px rgba(4, 12, 9, .6);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: radial-gradient(ellipse at 50% 30%, #284a40, var(--verde-fundo) 75%) fixed;
+    background-color: var(--verde);
+    color: var(--creme);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  main {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 16px;
+  }
+
+  /* Palco: proporção A4 das artes (1240 x 1748), cabe na tela com espaço para os botões */
+  .palco {
+    position: relative;
+    height: min(calc(100svh - 112px), calc((100vw - 32px) * 1.40968), 1150px);
+    aspect-ratio: 1240 / 1748;
+    perspective: 2200px;
+    z-index: 1;
+    transform-origin: 0 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .palco img { -webkit-user-drag: none; }
+  /* Ampliar: pinça, dois toques, Ctrl + rolagem, Ctrl e + */
+  .palco.aberto { touch-action: none; }
+  .palco.suave { transition: transform .3s ease; }
+  .palco.ampliado { cursor: grab; }
+  .palco.arrastando { cursor: grabbing; }
+
+  /* ---------- Fundo do envelope (aparece quando as abas abrem) ---------- */
+  .forro {
+    position: absolute;
+    inset: 0;
+    border-radius: 3px;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(255,255,255,.04), transparent 70%),
+      var(--verde-forro);
+    box-shadow: var(--sombra), inset 0 0 50px rgba(0,0,0,.55);
+    transition: opacity .5s ease 0s;
+  }
+  .aberto .forro { opacity: 0; transition: opacity .6s ease 1.3s; }
+
+  /* ---------- Cartão (frente: comandantes · verso: convite) ---------- */
+  .cartao {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: scale(.9) translateY(1.5%);
+    transition: transform .7s var(--curva) 0s;
+  }
+  .aberto .cartao { transform: none; transition: transform 1s var(--curva-saida) 1.05s; }
+
+  .cartao-ergue, .cartao-gira {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+  .cartao-gira { transition: transform 1.1s var(--curva); }
+  .verso-visivel .cartao-gira { transform: rotateY(-180deg); }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: 3px;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: var(--sombra);
+    background: var(--creme);
+  }
+  .face img { display: block; width: 100%; height: 100%; }
+  .face.verso { transform: rotateY(180deg); }
+  /* Sombra do cartão enquanto está dentro do envelope */
+  .face .sombra-dentro {
+    position: absolute;
+    inset: 0;
+    background: #0b1a14;
+    opacity: .7;
+    transition: opacity .5s ease .2s;
+  }
+  .aberto .face .sombra-dentro { opacity: 0; transition: opacity .8s ease .6s; }
+
+  /* ---------- Abas do envelope: abrem a partir do selo ---------- */
+  .aba {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    transform-style: preserve-3d;
+    transition: transform .3s ease-out 1.55s;
+  }
+  .aba.esq { left: 0; width: calc(var(--corte) * 100%); }
+  .aba.dir { left: calc(var(--corte) * 100%); right: 0; }
+  /* 1º o selo racha: as abas se afastam um pouco */
+  .aberto .aba { transition: transform .3s ease-out 0s; }
+  .aberto .aba.esq { transform: translateX(-1%); }
+  .aberto .aba.dir { transform: translateX(3%); }
+
+  .folha {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 1s var(--curva) .5s;
+  }
+  .aba.esq .folha { transform-origin: left center; }
+  .aba.dir .folha { transform-origin: right center; }
+  /* 2º as abas se abrem como portas */
+  .aberto .folha { transition: transform 1.1s var(--curva) .3s; }
+  .aberto .aba.esq .folha { transform: rotateY(-112deg); }
+  .aberto .aba.dir .folha { transform: rotateY(112deg); }
+
+  .lado {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: opacity .25s ease .45s;
+  }
+  .aberto .lado { opacity: 0; transition: opacity .45s ease 1s; }
+  .aba.esq .lado.fora { border-radius: 3px 0 0 3px; }
+  .aba.dir .lado.fora { border-radius: 0 3px 3px 0; }
+  .lado img { position: absolute; top: 0; height: 100%; max-width: none; display: block; }
+  .aba.esq .lado img { left: 0; width: calc(100% / var(--corte)); }
+  .aba.dir .lado img {
+    width: calc(100% / (1 - var(--corte)));
+    left: calc(-100% * var(--corte) / (1 - var(--corte)));
+  }
+  /* Parte de dentro da aba (forro) */
+  .lado.dentro {
+    transform: rotateY(180deg);
+    background: linear-gradient(90deg, #0e1f18, #163026 60%, #11241c);
+  }
+
+  /* Área clicável do envelope inteiro; o anel marca o selo quando navega pelo teclado */
+  .abrir {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .abrir:focus { outline: none; }
+  .abrir .anel {
+    position: absolute;
+    left: 63.6%;
+    top: 22%;
+    width: 18.6%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+  .abrir:focus-visible .anel { outline: 2px solid var(--creme); outline-offset: 4px; }
+  .aberto .abrir { display: none; }
+
+  /* ---------- Botões: estáticos, abaixo do cartão para não cobrir nada ---------- */
+  .controles {
+    position: relative;
+    z-index: 2;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .grupo { display: flex; gap: 12px; }
+  .grupo[hidden] { display: none; }
+
+  .botao {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 0 22px;
+    border-radius: 2px;
+    font: 600 15px/1 "Cormorant Garamond", Georgia, serif;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: none;
+  }
+  .botao svg { width: 18px; height: 10px; flex: none; }
+  .botao.principal {
+    background: var(--creme);
+    color: var(--tinta);
+    border: 1px solid var(--creme);
+    box-shadow: inset 0 0 0 3px var(--creme), inset 0 0 0 4px var(--dourado);
+  }
+  .botao.secundario {
+    background: #152b23;
+    color: var(--creme);
+    border: 1px solid rgba(179, 154, 98, .75);
+  }
+  @media (hover: hover) {
+    .botao.principal:hover { background: #fbf7ea; border-color: #fbf7ea; box-shadow: inset 0 0 0 3px #fbf7ea, inset 0 0 0 4px var(--dourado); }
+    .botao.secundario:hover { background: #1d382e; }
+  }
+  .botao:focus-visible { outline: 2px solid var(--dourado); outline-offset: 3px; }
+
+  .so-leitor {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  @media (max-width: 420px) {
+    .grupo { gap: 10px; }
+    .botao { padding: 0 16px; font-size: 14px; letter-spacing: .14em; gap: 8px; }
+  }
+  @media (max-width: 340px) {
+    .botao { padding: 0 12px; font-size: 13px; letter-spacing: .1em; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .forro, .cartao, .cartao-gira, .aba, .folha, .lado,
+    .aberto .forro, .aberto .cartao, .aberto .aba, .aberto .folha, .aberto .lado {
+      transition-duration: .25s !important;
+      transition-delay: 0s !important;
+    }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="palco" id="convite">
+    <div class="forro" aria-hidden="true"></div>
+
+    <div class="cartao">
+      <div class="cartao-ergue">
+        <div class="cartao-gira">
+          <div class="face frente">
+            <img draggable="false" src="assets/convite-2.jpg" alt="Antigos Comandantes do CPOR/SP, de 1930 aos dias de hoje" width="1240" height="1748">
+            <div class="sombra-dentro" aria-hidden="true"></div>
+          </div>
+          <div class="face verso">
+            <img draggable="false" src="assets/convite-3.jpg" alt="Convite para a Solenidade de Passagem de Comando do CPOR/SP" width="1240" height="1748">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="aba esq" aria-hidden="true">
+      <div class="folha">
+        <div class="lado fora"><img draggable="false" src="assets/convite-1-foto.jpg" alt=""></div>
+        <div class="lado dentro"></div>
+      </div>
+    </div>
+    <div class="aba dir" aria-hidden="true">
+      <div class="folha">
+        <div class="lado fora"><img draggable="false" src="assets/convite-1-foto.jpg" alt=""></div>
+        <div class="lado dentro"></div>
+      </div>
+    </div>
+
+    <button type="button" class="abrir" id="abrir" aria-label="Abrir o convite">
+      <span class="anel"></span>
+    </button>
+  </div>
+
+  <nav class="controles" aria-label="Navegação do convite">
+    <div class="grupo" data-etapa="frente" hidden>
+      <button type="button" class="botao secundario" id="fechar">
+        <svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M17 5H1M5 1 1 5l4 4"/></svg>
+        Voltar
+      </button>
+      <button type="button" class="botao principal" id="virar">
+        Ver o convite
+        <svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M1 5h16M13 1l4 4-4 4"/></svg>
+      </button>
+    </div>
+    <div class="grupo" data-etapa="verso" hidden>
+      <button type="button" class="botao secundario" id="desvirar">
+        <svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M17 5H1M5 1 1 5l4 4"/></svg>
+        Voltar
+      </button>
+    </div>
+  </nav>
+
+  <div class="so-leitor" aria-live="polite" id="aviso"></div>
+  <div class="so-leitor">
+    O Diretor de Educação Superior Militar, General de Divisão Eduardo da VEIGA Cabral, tem a honra de convidar
+    o(a) Senhor(a) e digníssima família para a Solenidade de Passagem de Comando do Centro de Preparação de
+    Oficiais da Reserva de São Paulo (CPOR/SP), do Coronel Frederico Vieira CABRAL Mendes ao Tenente Coronel
+    Daniel RAMOS LEMOS. Quinta-feira, 14 de janeiro de 2027. Inauguração do Retrato do Comandante Sucedido às
+    18h30. Passagem de Comando às 19h. Rua Alfredo Pujol, 681, Santana, São Paulo/SP. Traje: militares, 9º B2 ou
+    correspondente; militares da reserva e civis, esporte fino. Confirme sua presença até 08/01/2027 pelo e-mail
+    comsoc@cporsp.eb.mil.br ou pelo telefone (11) 93948-8270.
+  </div>
+</main>
+
+<script>
+  (function () {
+    var palco = document.getElementById("convite");
+    var ergue = palco.querySelector(".cartao-ergue");
+    var aviso = document.getElementById("aviso");
+    var grupos = document.querySelectorAll(".grupo");
+    var reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var ocupado = false;
+
+    // Tempo de cada transição (ms) — igual ao CSS
+    var T = reduzido
+      ? { abrir: 300, fechar: 300, virar: 300 }
+      : { abrir: 2050, fechar: 1900, virar: 1150 };
+
+    function mostrar(etapa, foco) {
+      grupos.forEach(function (g) { g.hidden = g.dataset.etapa !== etapa; });
+      if (foco) document.getElementById(foco).focus({ preventScroll: true });
+    }
+
+    function depois(ms, fn) {
+      ocupado = true;
+      mostrar(null);
+      setTimeout(function () { ocupado = false; fn(); }, ms);
+    }
+
+    function erguer() {
+      if (reduzido || !ergue.animate) return;
+      ergue.animate(
+        [{ transform: "none" }, { transform: "scale(.93)", offset: .5 }, { transform: "none" }],
+        { duration: 1100, easing: "ease-in-out" }
+      );
+    }
+
+    /* ---------------- Ampliar o cartão ---------------- */
+    var MAX = 4;
+    var z = { s: 1, x: 0, y: 0 };
+
+    function limitar(v, a, b) { return Math.min(Math.max(v, a), b); }
+    function podeAmpliar() { return palco.classList.contains("aberto") && !ocupado; }
+    // Posição do cartão sem ampliação (não depende do transform)
+    function base() {
+      return { left: palco.offsetLeft, top: palco.offsetTop, w: palco.offsetWidth, h: palco.offsetHeight };
+    }
+
+    function aplicar(s, x, y, suave) {
+      var b = base();
+      var vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
+      s = limitar(s, 1, MAX);
+      if (s <= 1.001) { s = 1; x = 0; y = 0; }
+      else {
+        var W = b.w * s, H = b.h * s, L = b.left + x, T2 = b.top + y;
+        L = W >= vw ? limitar(L, vw - W, 0) : limitar(L, 0, vw - W);
+        T2 = H >= vh ? limitar(T2, vh - H, 0) : limitar(T2, 0, vh - H);
+        x = L - b.left; y = T2 - b.top;
+      }
+      z = { s: s, x: x, y: y };
+      palco.classList.toggle("suave", !!suave);
+      palco.classList.toggle("ampliado", s > 1);
+      palco.style.transform = s === 1 ? "" : "translate(" + x + "px," + y + "px) scale(" + s + ")";
+    }
+
+    // Amplia mantendo parado o ponto (px, py) da tela
+    function ampliarEm(px, py, s, suave) {
+      var b = base();
+      s = limitar(s, 1, MAX);
+      var cx = (px - b.left - z.x) / z.s, cy = (py - b.top - z.y) / z.s;
+      aplicar(s, px - b.left - cx * s, py - b.top - cy * s, suave);
+    }
+
+    function centro() {
+      var r = palco.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+
+    // Toque / mouse: pinça, arrastar e dois toques
+    var pontos = new Map(), gesto = null, ultimoToque = null;
+
+    function iniciarGesto() {
+      var p = Array.from(pontos.values()), b = base();
+      if (p.length >= 2) {
+        var mx = (p[0].x + p[1].x) / 2, my = (p[0].y + p[1].y) / 2;
+        gesto = {
+          tipo: "pinca",
+          d0: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1,
+          s0: z.s,
+          cx: (mx - b.left - z.x) / z.s,
+          cy: (my - b.top - z.y) / z.s
+        };
+      } else if (p.length === 1) {
+        gesto = { tipo: "arrasto", px: p[0].x, py: p[0].y, x0: z.x, y0: z.y, t0: performance.now(), moveu: false };
+      } else {
+        gesto = null;
+      }
+    }
+
+    palco.addEventListener("pointerdown", function (e) {
+      if (!podeAmpliar() || (e.pointerType === "mouse" && e.button !== 0)) return;
+      try { palco.setPointerCapture(e.pointerId); } catch (_) {}
+      pontos.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pontos.size > 1) ultimoToque = null;
+      iniciarGesto();
+    });
+
+    palco.addEventListener("pointermove", function (e) {
+      if (!pontos.has(e.pointerId) || !gesto) return;
+      pontos.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      var b = base();
+      if (gesto.tipo === "pinca" && pontos.size >= 2) {
+        var p = Array.from(pontos.values());
+        var mx = (p[0].x + p[1].x) / 2, my = (p[0].y + p[1].y) / 2;
+        var s = limitar(gesto.s0 * Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) / gesto.d0, 1, MAX);
+        aplicar(s, mx - b.left - gesto.cx * s, my - b.top - gesto.cy * s);
+      } else if (gesto.tipo === "arrasto") {
+        var dx = e.clientX - gesto.px, dy = e.clientY - gesto.py;
+        if (Math.hypot(dx, dy) > 8) gesto.moveu = true;
+        if (z.s > 1 && gesto.moveu) {
+          palco.classList.add("arrastando");
+          aplicar(z.s, gesto.x0 + dx, gesto.y0 + dy);
+        }
+      }
+    });
+
+    function soltar(e) {
+      if (!pontos.has(e.pointerId)) return;
+      var g = gesto;
+      pontos.delete(e.pointerId);
+      palco.classList.remove("arrastando");
+
+      // Dois toques (ou duplo clique): amplia no ponto tocado, ou volta ao normal
+      if (e.type === "pointerup" && g && g.tipo === "arrasto" && !g.moveu && performance.now() - g.t0 < 300) {
+        var agora = performance.now();
+        if (ultimoToque && agora - ultimoToque.t < 320 && Math.hypot(e.clientX - ultimoToque.x, e.clientY - ultimoToque.y) < 40) {
+          if (z.s > 1.05) aplicar(1, 0, 0, true);
+          else ampliarEm(e.clientX, e.clientY, 2.5, true);
+          ultimoToque = null;
+        } else {
+          ultimoToque = { t: agora, x: e.clientX, y: e.clientY };
+        }
+      }
+      if (pontos.size === 0 && z.s < 1.03) aplicar(1, 0, 0, true);
+      iniciarGesto();
+    }
+    palco.addEventListener("pointerup", soltar);
+    palco.addEventListener("pointercancel", soltar);
+
+    // Computador: Ctrl + rolagem e pinça no trackpad ampliam; rolagem move quando ampliado
+    window.addEventListener("wheel", function (e) {
+      if (!podeAmpliar()) return;
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        var passo = e.deltaMode === 1 ? 0.05 : 0.0025;
+        ampliarEm(e.clientX, e.clientY, z.s * limitar(Math.exp(-e.deltaY * passo), 0.5, 2));
+      } else if (z.s > 1) {
+        e.preventDefault();
+        aplicar(z.s, z.x - e.deltaX, z.y - e.deltaY);
+      }
+    }, { passive: false });
+
+    // Safari no Mac: pinça no trackpad
+    var sGesto = 1;
+    window.addEventListener("gesturestart", function (e) {
+      if (!podeAmpliar() || pontos.size) return;
+      e.preventDefault(); sGesto = z.s;
+    });
+    window.addEventListener("gesturechange", function (e) {
+      if (!podeAmpliar() || pontos.size) return;
+      e.preventDefault(); ampliarEm(e.clientX, e.clientY, sGesto * e.scale);
+    });
+
+    // Ctrl/Cmd e "+", "-" ou "0"
+    window.addEventListener("keydown", function (e) {
+      if (!(e.ctrlKey || e.metaKey) || !podeAmpliar()) return;
+      var c = centro();
+      if (e.key === "+" || e.key === "=") { e.preventDefault(); ampliarEm(c.x, c.y, z.s * 1.25, true); }
+      else if (e.key === "-") { e.preventDefault(); ampliarEm(c.x, c.y, z.s / 1.25, true); }
+      else if (e.key === "0") { e.preventDefault(); aplicar(1, 0, 0, true); }
+    });
+
+    window.addEventListener("resize", function () { aplicar(z.s, z.x, z.y); });
+
+    // Antes de virar ou fechar, o cartão volta ao tamanho normal
+    function semZoom(fn) {
+      if (z.s === 1) { fn(); return; }
+      aplicar(1, 0, 0, true);
+      ocupado = true;
+      setTimeout(function () { ocupado = false; palco.classList.remove("suave"); fn(); }, 320);
+    }
+
+    /* ---------------- Navegação ---------------- */
+    document.getElementById("abrir").addEventListener("click", function () {
+      if (ocupado) return;
+      palco.classList.add("aberto");
+      aviso.textContent = "Convite aberto: Antigos Comandantes.";
+      depois(T.abrir, function () { mostrar("frente", "virar"); });
+    });
+
+    document.getElementById("fechar").addEventListener("click", function () {
+      if (ocupado) return;
+      semZoom(function () {
+        palco.classList.remove("aberto");
+        aviso.textContent = "Envelope fechado.";
+        depois(T.fechar, function () { mostrar(null); document.getElementById("abrir").focus({ preventScroll: true }); });
+      });
+    });
+
+    document.getElementById("virar").addEventListener("click", function () {
+      if (ocupado) return;
+      semZoom(function () {
+        palco.classList.add("verso-visivel");
+        erguer();
+        aviso.textContent = "Verso: convite da Passagem de Comando.";
+        depois(T.virar, function () { mostrar("verso", "desvirar"); });
+      });
+    });
+
+    document.getElementById("desvirar").addEventListener("click", function () {
+      if (ocupado) return;
+      semZoom(function () {
+        palco.classList.remove("verso-visivel");
+        erguer();
+        aviso.textContent = "Frente: Antigos Comandantes.";
+        depois(T.virar, function () { mostrar("frente", "virar"); });
+      });
+    });
+  })();
+</script>
+</body>
+</html>
