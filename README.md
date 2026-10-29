@@ -19,10 +19,14 @@ O cartão aberto pode ser ampliado com os gestos de sempre: pinça ou dois toque
 Para trocar uma arte, substitua o arquivo em `assets/` mantendo o nome e a proporção 1240 × 1748.
 
 ## Capas
-As três ficam lado a lado em `opcoes.html`. Só a capa (envelope) muda; o resto é igual.
+Todas ficam lado a lado em `opcoes.html`. Nas opções 1 a 3 só a capa muda; as opções 4 a 7 têm capa, frente e verso próprios (`assets/opcao-N/`).
 - `index.html` — capa 1: brasão ao centro, selo de cera embaixo
 - `capa-2.html` — capa 2: brasão como selo
 - `capa-3.html` — capa 3: selo de cera no alto, brasão embaixo
+- `opcao-4.html` — artes 11, 12, 13: brasão como selo, verso estampado
+- `opcao-5.html` — artes 14, 15, 16: selo de cera no alto, brasão embaixo, verso estampado
+- `opcao-6.html` — artes 17, 18, 19: brasão como selo, verso com foto do quartel
+- `opcao-7.html` — artes 20, 21, 22: selo de cera no alto, brasão embaixo, verso com foto do quartel
 
 Cada página indica onde fica o selo (o anel de foco do teclado) pelas variáveis `--selo-x`, `--selo-y` e `--selo-w` no `style` do `#convite`.
 Se mudar algo no `index.html`, copie para `capa-2.html` e `capa-3.html` trocando só a imagem da capa (`assets/convite-1b.jpg` / `assets/convite-1c.jpg`) e esse `style`.
