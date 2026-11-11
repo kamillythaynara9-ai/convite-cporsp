@@ -1,7 +1,7 @@
 /* Passagem de Comando · CPOR/SP — convite virtual
-   Conceito: "descerramento". O retrato do comandante sucedido é descoberto na cerimônia;
-   o convite também: uma cortina de veludo presa pelo selo se abre, e quem lê
-   passa o comando com as próprias mãos. Identidade: a opção 1 do convite impresso
+   Conceito: o convite que se abre e o comando que passa de mão. A capa fechada é a da
+   opção 1 (papel verde, faixa de damasco, selo de cera na emenda); ao romper o selo,
+   as duas folhas abrem como um convite dobrado. Quem lê passa o comando com as próprias mãos. Identidade: a opção 1 do convite impresso
    (papel verde, faixa de damasco, selo de cera, creme e caligrafia). */
 
 :root {
@@ -81,113 +81,44 @@ a { color: inherit; }
 
 
 /* =========================================================
-   Cortina (descerramento)
+   Capa fechada (opção 1) que abre em duas folhas
    ========================================================= */
-.cortina { display: none; }
-.js .cortina {
+.capa-fechada { display: none; }
+.js .capa-fechada {
   position: fixed;
   inset: 0;
   z-index: 40;
   display: grid;
-  place-items: center;
+  grid-template-columns: 1fr minmax(84px, 27%);
   overflow: hidden;
 }
-.js body.coberto { overflow: hidden; }
-.js body.coberto main, .js body.coberto .flutuante { visibility: hidden; }
+.js body.fechado { overflow: hidden; }
+.js body.fechado main, .js body.fechado .flutuante { visibility: hidden; }
 
-.cortina-lado {
-  position: absolute;
-  top: -2%;
-  bottom: -2%;
-  width: 51%;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, .25), transparent 18%, transparent 75%, rgba(0, 0, 0, .45)),
-    repeating-linear-gradient(90deg,
-      #0d1f18 0, #1c3a2f 7%, #2a4b3e 11%, #1a3329 16%, #0e2019 21%, #183429 27%, #24453a 31%, #112620 36%);
-  transition: transform 1.25s var(--curva), filter 1.25s var(--curva);
-}
-.cortina-lado.esq { left: 0; transform-origin: 0 50%; box-shadow: inset -2px 0 0 rgba(201, 173, 114, .55), inset -14px 0 20px -8px rgba(0, 0, 0, .55); }
-.cortina-lado.dir { right: 0; transform-origin: 100% 50%; box-shadow: inset 2px 0 0 rgba(201, 173, 114, .55), inset 14px 0 20px -8px rgba(0, 0, 0, .55); }
-/* franja dourada na barra da cortina */
-.cortina-lado::after {
+.folha { position: relative; transform: perspective(1600px) rotateY(0deg); }
+/* sombra que escurece a folha enquanto ela abre */
+.folha::after {
   content: "";
   position: absolute;
-  left: 0; right: 0; bottom: 2%;
-  height: 18px;
-  background: repeating-linear-gradient(90deg, var(--ouro-escuro) 0 2px, var(--ouro) 2px 4px, transparent 4px 6px);
-  opacity: .8;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.15s ease .35s;
 }
-
-.cortina-centro {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 26px;
-  padding: 24px;
-  text-align: center;
-  transition: opacity .35s ease;
+.folha-papel { transform-origin: 0 50%; }
+.folha-faixa { transform-origin: 100% 50%; }
+.folha-frente {
+  position: absolute;
+  inset: 0;
 }
-.cortina-quem {
-  margin: 0;
-  font: 500 11px/1.9 var(--f-placa);
-  letter-spacing: .3em;
-  text-transform: uppercase;
-  color: var(--ouro);
-}
-.cortina-selo {
-  width: clamp(130px, 38vw, 190px);
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .55));
-  animation: pulsar 2.8s ease-in-out infinite;
-}
-.cortina-selo img { width: 100%; }
-.cortina-selo:focus-visible { border-radius: 50%; outline-offset: 8px; }
-@keyframes pulsar {
-  0%, 100% { transform: rotate(-6deg) scale(1); }
-  50% { transform: rotate(-3deg) scale(1.045); }
-}
-.cortina-dica { margin: 0; font: 400 italic 21px/1.3 var(--f-texto); color: var(--creme); opacity: .85; }
-
-/* abrindo */
-.cortina.abrindo .cortina-selo { animation: seloRompe .55s var(--curva) forwards; }
-.cortina.abrindo .cortina-quem, .cortina.abrindo .cortina-dica { opacity: 0; transition: opacity .25s; }
-.cortina.abrindo .cortina-lado { transition-delay: .3s; filter: brightness(.7); }
-.cortina.abrindo .cortina-lado.esq { transform: translateX(-88%) scaleX(.55) skewY(3deg); }
-.cortina.abrindo .cortina-lado.dir { transform: translateX(88%) scaleX(.55) skewY(-3deg); }
-.cortina.some { opacity: 0; transition: opacity .4s ease; pointer-events: none; }
-@keyframes seloRompe {
-  40% { transform: rotate(4deg) scale(1.12); }
-  100% { transform: rotate(18deg) scale(.4); opacity: 0; }
-}
-
-/* =========================================================
-   1. Abertura (papel verde + faixa de damasco)
-   ========================================================= */
-.abertura {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr minmax(84px, 27%);
-  min-height: 100svh;
-  background: var(--verde);
-}
-.abertura-papel {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 110px 18px 140px;
-  background: url("papel-verde-alto.jpg") center / cover;
-}
-.abertura-faixa {
+.folha-papel .folha-frente { background: url("papel-verde-alto.jpg") center / cover; }
+.folha-faixa .folha-frente {
   background: url("faixa-damasco.jpg") center top / 100% auto repeat-y;
   box-shadow: inset 10px 0 18px -10px rgba(0, 0, 0, .65);
 }
-.abertura-selo-postal {
+
+.capa-selo-postal {
   position: absolute;
   top: max(22px, env(safe-area-inset-top));
   left: 18px;
@@ -195,73 +126,93 @@ a { color: inherit; }
   transform: rotate(-4deg);
   filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .4));
 }
-.abertura-texto { text-align: center; }
-.abertura .sobrescrito { color: var(--ouro); }
-.abertura-titulo {
-  margin: 0;
+.capa-texto {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  font: 400 clamp(54px, 17vw, 128px)/.98 var(--f-caligrafia);
-  color: var(--creme);
-  text-shadow: 0 4px 24px rgba(0, 0, 0, .35);
-}
-.abertura-titulo span:last-child { padding-left: .5em; }
-.abertura-data {
-  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin: 26px 0 0;
-  font: 400 clamp(28px, 8vw, 46px)/1 var(--f-placa);
-  letter-spacing: .06em;
-  color: var(--creme);
+  padding: 90px 16px 200px;
+  text-align: center;
 }
-.abertura-data i { font-style: normal; font-size: .5em; color: var(--ouro); }
-.abertura-hora {
-  margin: 12px 0 0;
-  font: 500 12px/1 var(--f-placa);
+.capa-brasao { width: clamp(84px, 24vw, 130px); margin-bottom: 22px; filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .45)); }
+.capa-convida {
+  margin: 0 0 10px;
+  font: 500 11.5px/1.4 var(--f-placa);
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--ouro);
 }
-/* brasão sobre a costura entre o papel e a faixa, como o selo no impresso */
-.abertura-brasao {
-  position: absolute;
-  z-index: 2;
-  left: 100%;
-  bottom: 13svh;
-  width: clamp(92px, 26vw, 170px);
-  transform: translateX(-50%);
-  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, .5));
+.capa-titulo {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font: 400 clamp(52px, 16vw, 120px)/1 var(--f-caligrafia);
+  color: var(--creme);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, .35);
 }
-.abertura-seguir {
-  position: absolute;
-  left: 18px;
-  bottom: max(26px, env(safe-area-inset-bottom));
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  font: 500 11px/1 var(--f-placa);
-  letter-spacing: .24em;
-  text-transform: uppercase;
-  text-decoration: none;
+.capa-titulo span:last-child { padding-left: .45em; }
+.capa-data {
+  margin: 22px 0 0;
+  font: 400 clamp(26px, 7.4vw, 42px)/1 var(--f-placa);
+  letter-spacing: .08em;
   color: var(--creme);
 }
-.abertura-seguir svg { width: 20px; height: 20px; animation: descer 2.2s ease-in-out infinite; }
-@keyframes descer { 50% { transform: translateY(5px); } }
+.capa-data i { font-style: normal; font-size: .5em; vertical-align: middle; color: var(--ouro); }
 
-/* entrada da abertura, depois da cortina */
-.js .abertura .entra { opacity: 0; transform: translateY(18px); }
-.js .aberto .abertura .entra { opacity: 1; transform: none; transition: opacity 1s ease, transform 1.1s var(--curva-saida); }
-.js .aberto .abertura .entra:nth-child(2) { transition-delay: .15s; }
-.js .aberto .abertura .entra:nth-child(3) { transition-delay: .3s; }
-.js .aberto .abertura .entra:nth-child(4) { transition-delay: .45s; }
+/* selo de cera sobre a emenda das duas folhas, como no impresso */
+.capa-selo {
+  position: absolute;
+  z-index: 3;
+  left: calc(100% - max(84px, 27%));
+  bottom: 8svh;
+  width: clamp(120px, 34vw, 190px);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform: translateX(-50%) rotate(-6deg);
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .55));
+}
+.capa-selo img { width: 100%; animation: respirar 2.8s ease-in-out infinite; }
+@keyframes respirar { 50% { transform: scale(1.045); } }
+.capa-selo:focus-visible { border-radius: 50%; outline-offset: 8px; }
+.capa-dica {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  font: 400 24px/1 var(--f-caligrafia);
+  color: var(--creme);
+  transform: translateX(-50%) rotate(6deg);
+}
+@media (min-width: 820px) {
+  .js .capa-fechada { grid-template-columns: 1fr min(27%, 340px); }
+  .capa-selo { left: calc(100% - min(27%, 340px)); bottom: 10svh; }
+  .capa-selo-postal { left: 34px; top: 34px; }
+}
+
+/* abrindo */
+.capa-fechada.abrindo .capa-selo { animation: seloRompe .5s var(--curva) forwards; }
+.capa-fechada.abrindo .folha { transition: transform 1.15s var(--curva) .35s; }
+.capa-fechada.abrindo .folha::after { opacity: .55; }
+.capa-fechada.abrindo .folha-papel { transform: perspective(1600px) rotateY(-100deg); }
+.capa-fechada.abrindo .folha-faixa { transform: perspective(1600px) rotateY(100deg); }
+.capa-fechada.some { opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+@keyframes seloRompe {
+  35% { transform: translateX(-50%) rotate(2deg) scale(1.1); }
+  100% { transform: translateX(-50%) rotate(16deg) scale(.5); opacity: 0; }
+}
 
 /* =========================================================
-   2. O convite em arco
+   1. O convite em arco (primeira tela depois de abrir)
    ========================================================= */
-.convite { padding: 96px 16px 110px; }
+.convite { padding: max(48px, env(safe-area-inset-top)) 16px 110px; }
+.convite-topo { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 34px; }
+.convite-topo img { width: 64px; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .4)); }
+.convite-topo .sobrescrito { margin: 0; }
 .arco {
   max-width: 560px;
   margin: 0 auto;
@@ -729,10 +680,6 @@ a { color: inherit; }
    Telas maiores
    ========================================================= */
 @media (min-width: 820px) {
-  .abertura { grid-template-columns: 1fr min(27%, 340px); }
-  .abertura-brasao { bottom: 10svh; }
-  .abertura-selo-postal { left: 34px; top: 34px; }
-  .abertura-seguir { left: 34px; }
   .passagem-palco { flex-direction: row; align-items: center; gap: 22px; }
   .oficial { flex: 1; }
   .oficial.entrega { align-items: flex-end; text-align: right; }

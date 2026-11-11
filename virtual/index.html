@@ -23,45 +23,38 @@
 </head>
 <body>
 
-<!-- Abertura: descerramento. Uma cortina de veludo, presa pelo selo, cobre o convite -->
-<div class="cortina" id="cortina" role="dialog" aria-label="Convite coberto">
-  <div class="cortina-lado esq" aria-hidden="true"></div>
-  <div class="cortina-lado dir" aria-hidden="true"></div>
-  <div class="cortina-centro">
-    <p class="cortina-quem">Centro de Preparação de<br>Oficiais da Reserva de São Paulo</p>
-    <button type="button" class="cortina-selo" id="descerrar" aria-label="Descerrar o convite">
-      <img src="selo-cera.png" alt="" width="229" height="235">
-    </button>
-    <p class="cortina-dica">Toque no selo para descerrar</p>
+<!-- Abertura: a capa fechada do convite (opção 1). O selo une as duas folhas; ao romper, elas se abrem -->
+<div class="capa-fechada" id="capa" role="dialog" aria-label="Convite fechado">
+  <div class="folha folha-papel" aria-hidden="true">
+    <div class="folha-frente">
+      <img class="capa-selo-postal" src="selo-postal.png" alt="" width="207" height="164">
+      <div class="capa-texto">
+        <img class="capa-brasao" src="brasao.png" alt="" width="416" height="416">
+        <p class="capa-convida">CPOR/SP convida</p>
+        <p class="capa-titulo"><span>Passagem</span><span>de Comando</span></p>
+        <p class="capa-data">14 <i>•</i> 01 <i>•</i> 27</p>
+      </div>
+    </div>
   </div>
+  <div class="folha folha-faixa" aria-hidden="true">
+    <div class="folha-frente"></div>
+  </div>
+  <button type="button" class="capa-selo" id="abrir" aria-label="Abrir o convite">
+    <span class="capa-dica" aria-hidden="true">Toque para abrir</span>
+    <img src="selo-cera.png" alt="" width="229" height="235">
+  </button>
 </div>
+
 
 <main id="conteudo">
 
-  <!-- 1. Abertura: o envelope da opção 1 virou a primeira tela -->
-  <section class="abertura" id="inicio">
-    <div class="abertura-papel">
-      <img class="abertura-selo-postal" src="selo-postal.png" alt="Selo com a fachada do CPOR/SP" width="207" height="164">
-      <div class="abertura-texto">
-        <p class="sobrescrito entra">CPOR/SP convida</p>
-        <h1 class="abertura-titulo entra"><span>Passagem</span><span>de Comando</span></h1>
-        <p class="abertura-data entra" aria-label="14 de janeiro de 2027">
-          <span>14</span><i aria-hidden="true">•</i><span>01</span><i aria-hidden="true">•</i><span>27</span>
-        </p>
-        <p class="abertura-hora entra">Quinta-feira · 19h</p>
-      </div>
-      <img class="abertura-brasao" src="brasao.png" alt="Brasão do CPOR/SP" width="416" height="416">
-    </div>
-    <div class="abertura-faixa" aria-hidden="true"></div>
-    <a class="abertura-seguir" href="#convite" aria-label="Ler o convite">
-      <span>Ler o convite</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-    </a>
-  </section>
-
-  <!-- 2. O convite, no recorte de arco do verso impresso -->
+  <!-- 1. O convite (o que aparece ao abrir), no recorte de arco do verso impresso -->
   <section class="convite" id="convite" aria-labelledby="convite-titulo">
-    <article class="arco revela">
+    <header class="convite-topo">
+      <img src="brasao.png" alt="Brasão do CPOR/SP" width="416" height="416">
+      <p class="sobrescrito claro">Passagem de Comando · 14 · 01 · 27</p>
+    </header>
+    <article class="arco">
       <h2 id="convite-titulo" class="caligrafia">Convite</h2>
       <p class="frase">O Diretor de Educação Superior Militar,</p>
       <p class="frase nome">General de Divisão Eduardo da <b>VEIGA</b> Cabral,</p>

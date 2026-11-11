@@ -92,28 +92,30 @@ const CONVITE = {
   $("#email-texto").textContent = CONVITE.email;
   $("#whatsapp-texto").textContent = "WhatsApp " + CONVITE.whatsappTexto;
 
-  /* ---------- Cortina: descerrar ---------- */
-  const cortina = $("#cortina");
+  /* ---------- Capa fechada: abrir o convite ---------- */
+  const capa = $("#capa");
   const main = $("#conteudo");
-  document.body.classList.add("coberto");
+  document.body.classList.add("fechado");
   main.setAttribute("inert", "");
   let aberto = false;
-  function descerrar() {
+  function abrir() {
     if (aberto) return;
     aberto = true;
-    cortina.classList.add("abrindo");
-    const [t1, t2] = calmo ? [150, 350] : [1350, 1750];
+    window.scrollTo(0, 0);
+    // o conteúdo aparece por trás enquanto as folhas abrem
+    document.body.classList.remove("fechado");
+    document.body.style.overflow = "hidden";
+    capa.classList.add("abrindo");
+    const [t1, t2] = calmo ? [150, 350] : [1450, 1850];
     setTimeout(() => {
-      document.body.classList.remove("coberto");
-      document.body.classList.add("aberto");
+      document.body.style.overflow = "";
       main.removeAttribute("inert");
-      window.scrollTo(0, 0);
-      cortina.classList.add("some");
+      capa.classList.add("some");
     }, t1);
-    setTimeout(() => { cortina.hidden = true; }, t2);
+    setTimeout(() => { capa.hidden = true; }, t2);
   }
-  $("#descerrar").addEventListener("click", descerrar);
-  cortina.addEventListener("click", e => { if (e.target === cortina || e.target.classList.contains("cortina-lado")) descerrar(); });
+  $("#abrir").addEventListener("click", abrir);
+  capa.addEventListener("click", e => { if (e.target.closest(".folha")) abrir(); });
 
   /* ---------- A noite ---------- */
   $("#momentos").innerHTML = CONVITE.momentos.map(m => `
@@ -268,7 +270,7 @@ const CONVITE = {
   }
 
   /* ---------- Botão flutuante de resposta ---------- */
-  const flut = $("#flutuante"), abertura = $("#inicio"), resposta = $("#confirmar");
+  const flut = $("#flutuante"), abertura = $("#convite"), resposta = $("#confirmar");
   let passouAbertura = false, vendoResposta = false;
   const atualizarFlut = () => flut.classList.toggle("visivel", passouAbertura && !vendoResposta);
   if ("IntersectionObserver" in window) {
