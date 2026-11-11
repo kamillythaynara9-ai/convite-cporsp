@@ -192,6 +192,10 @@ a { color: inherit; }
   .js .capa-fechada { grid-template-columns: 1fr min(27%, 340px); }
   .capa-selo { left: calc(100% - min(27%, 340px)); bottom: 10svh; }
   .capa-selo-postal { left: 34px; top: 34px; }
+  .abertura { grid-template-columns: 1fr min(27%, 340px); }
+  .abertura-brasao { bottom: 10svh; }
+  .abertura-selo-postal { left: 34px; top: 34px; }
+  .abertura-seguir { left: 34px; }
 }
 
 /* abrindo */
@@ -207,12 +211,102 @@ a { color: inherit; }
 }
 
 /* =========================================================
-   1. O convite em arco (primeira tela depois de abrir)
+   1. Abertura (papel verde + faixa de damasco)
    ========================================================= */
-.convite { padding: max(48px, env(safe-area-inset-top)) 16px 110px; }
-.convite-topo { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 34px; }
-.convite-topo img { width: 64px; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .4)); }
-.convite-topo .sobrescrito { margin: 0; }
+.abertura {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr minmax(84px, 27%);
+  min-height: 100svh;
+  background: var(--verde);
+}
+.abertura-papel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 110px 18px 140px;
+  background: url("papel-verde-alto.jpg") center / cover;
+}
+.abertura-faixa {
+  background: url("faixa-damasco.jpg") center top / 100% auto repeat-y;
+  box-shadow: inset 10px 0 18px -10px rgba(0, 0, 0, .65);
+}
+.abertura-selo-postal {
+  position: absolute;
+  top: max(22px, env(safe-area-inset-top));
+  left: 18px;
+  width: clamp(78px, 22vw, 130px);
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .4));
+}
+.abertura-texto { text-align: center; }
+.abertura .sobrescrito { color: var(--ouro); }
+.abertura-titulo {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font: 400 clamp(54px, 17vw, 128px)/.98 var(--f-caligrafia);
+  color: var(--creme);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, .35);
+}
+.abertura-titulo span:last-child { padding-left: .5em; }
+.abertura-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 26px 0 0;
+  font: 400 clamp(28px, 8vw, 46px)/1 var(--f-placa);
+  letter-spacing: .06em;
+  color: var(--creme);
+}
+.abertura-data i { font-style: normal; font-size: .5em; color: var(--ouro); }
+.abertura-hora {
+  margin: 12px 0 0;
+  font: 500 12px/1 var(--f-placa);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ouro);
+}
+/* brasão sobre a costura entre o papel e a faixa, como o selo no impresso */
+.abertura-brasao {
+  position: absolute;
+  z-index: 2;
+  left: 100%;
+  bottom: 13svh;
+  width: clamp(92px, 26vw, 170px);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, .5));
+}
+.abertura-seguir {
+  position: absolute;
+  left: 18px;
+  bottom: max(26px, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font: 500 11px/1 var(--f-placa);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--creme);
+}
+.abertura-seguir svg { width: 20px; height: 20px; animation: descer 2.2s ease-in-out infinite; }
+@keyframes descer { 50% { transform: translateY(5px); } }
+
+/* entrada da abertura, depois da cortina */
+.js .abertura .entra { opacity: 0; transform: translateY(18px); }
+.js .aberto .abertura .entra { opacity: 1; transform: none; transition: opacity 1s ease, transform 1.1s var(--curva-saida); }
+.js .aberto .abertura .entra:nth-child(2) { transition-delay: .15s; }
+.js .aberto .abertura .entra:nth-child(3) { transition-delay: .3s; }
+.js .aberto .abertura .entra:nth-child(4) { transition-delay: .45s; }
+
+/* =========================================================
+   2. O convite em arco
+   ========================================================= */
+.convite { padding: 96px 16px 110px; }
 .arco {
   max-width: 560px;
   margin: 0 auto;

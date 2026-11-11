@@ -48,13 +48,30 @@
 
 <main id="conteudo">
 
-  <!-- 1. O convite (o que aparece ao abrir), no recorte de arco do verso impresso -->
+  <!-- 1. Abertura: o envelope da opção 1 virou a primeira tela -->
+  <section class="abertura" id="inicio">
+    <div class="abertura-papel">
+      <img class="abertura-selo-postal" src="selo-postal.png" alt="Selo com a fachada do CPOR/SP" width="207" height="164">
+      <div class="abertura-texto">
+        <p class="sobrescrito entra">CPOR/SP convida</p>
+        <h1 class="abertura-titulo entra"><span>Passagem</span><span>de Comando</span></h1>
+        <p class="abertura-data entra" aria-label="14 de janeiro de 2027">
+          <span>14</span><i aria-hidden="true">•</i><span>01</span><i aria-hidden="true">•</i><span>27</span>
+        </p>
+        <p class="abertura-hora entra">Quinta-feira · 19h</p>
+      </div>
+      <img class="abertura-brasao" src="brasao.png" alt="Brasão do CPOR/SP" width="416" height="416">
+    </div>
+    <div class="abertura-faixa" aria-hidden="true"></div>
+    <a class="abertura-seguir" href="#convite" aria-label="Ler o convite">
+      <span>Ler o convite</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    </a>
+  </section>
+
+  <!-- 2. O convite, no recorte de arco do verso impresso -->
   <section class="convite" id="convite" aria-labelledby="convite-titulo">
-    <header class="convite-topo">
-      <img src="brasao.png" alt="Brasão do CPOR/SP" width="416" height="416">
-      <p class="sobrescrito claro">Passagem de Comando · 14 · 01 · 27</p>
-    </header>
-    <article class="arco">
+    <article class="arco revela">
       <h2 id="convite-titulo" class="caligrafia">Convite</h2>
       <p class="frase">O Diretor de Educação Superior Militar,</p>
       <p class="frase nome">General de Divisão Eduardo da <b>VEIGA</b> Cabral,</p>

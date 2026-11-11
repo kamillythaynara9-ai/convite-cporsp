@@ -104,6 +104,7 @@ const CONVITE = {
     window.scrollTo(0, 0);
     // o conteúdo aparece por trás enquanto as folhas abrem
     document.body.classList.remove("fechado");
+    document.body.classList.add("aberto");
     document.body.style.overflow = "hidden";
     capa.classList.add("abrindo");
     const [t1, t2] = calmo ? [150, 350] : [1450, 1850];
@@ -270,7 +271,7 @@ const CONVITE = {
   }
 
   /* ---------- Botão flutuante de resposta ---------- */
-  const flut = $("#flutuante"), abertura = $("#convite"), resposta = $("#confirmar");
+  const flut = $("#flutuante"), abertura = $("#inicio"), resposta = $("#confirmar");
   let passouAbertura = false, vendoResposta = false;
   const atualizarFlut = () => flut.classList.toggle("visivel", passouAbertura && !vendoResposta);
   if ("IntersectionObserver" in window) {
