@@ -30,3 +30,6 @@ Todas ficam lado a lado em `opcoes.html`. Nas opções 1 a 3 só a capa muda; as
 
 Cada página indica onde fica o selo (o anel de foco do teclado) pelas variáveis `--selo-x`, `--selo-y` e `--selo-w` no `style` do `#convite`.
 Se mudar algo no `index.html`, copie para `capa-2.html` e `capa-3.html` trocando só a imagem da capa (`assets/convite-1b.jpg` / `assets/convite-1c.jpg`) e esse `style`.
+
+## Convite virtual (teste)
+`virtual/` — versão em página de rolagem, no mesmo formato do convite dos aspirantes, com os elementos da opção 1: envelope de papel verde com o selo de cera, capa com a foto aérea, mensagem, quem entrega e quem assume o comando, contagem regressiva, programação (cartões que viram para mostrar o traje), Antigos Comandantes, local com mapa e confirmação. Conteúdo editável no objeto `CONVITE` no topo de `virtual/script.js`. Endereço: `/virtual/`.
